@@ -8,514 +8,188 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg-page: #FAF8F5;
-  --bg-card: #FFFFFF;
-  --bg-surface: #F3F0EB;
-  --text-primary: #1A1917;
-  --text-muted: #8A8680;
-  --border: #E8E4DE;
-  --accent: #2D8F6F;
-  --accent-bg: #E8F5EF;
-  --accent-hover: #247A5E;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-page: #141311;
-    --bg-card: #1E1D1A;
-    --bg-surface: #262420;
-    --text-primary: #EDE9E3;
-    --text-muted: #8A8680;
-    --border: #333028;
-    --accent: #3DB88A;
-    --accent-bg: #1A2E25;
-    --accent-hover: #4FCCA0;
-  }
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  background: var(--bg-page);
-  color: var(--text-primary);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.fade-in { animation: fadeUp 0.35s ease both; }
-input[type="text"], select {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--bg-card);
-  color: var(--text-primary);
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s;
-  appearance: none;
-  -webkit-appearance: none;
-}
-input[type="text"]:focus, select:focus { border-color: var(--accent); }
-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8680' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 36px;
-}
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 13px 30px;
-  background: var(--accent); color: #fff; border: none; border-radius: 10px;
-  font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
-  transition: all 0.15s;
-}
-.btn-primary:hover { background: var(--accent-hover); }
-.btn-primary:active { transform: scale(0.98); }
-.btn-ghost {
-  padding: 11px 22px;
-  background: transparent; color: var(--text-muted);
-  border: 1px solid var(--border); border-radius: 10px;
-  font-family: inherit; font-size: 13px; cursor: pointer;
-  transition: all 0.15s;
-}
-.btn-ghost:hover { border-color: var(--text-muted); color: var(--text-primary); }
-.disclaimer {
-  font-size: 11px; color: var(--text-muted); line-height: 1.6;
-  padding: 12px 14px; background: var(--bg-surface); border-radius: 8px; margin-top: 20px;
-}
-.progress-bar { display: flex; gap: 6px; margin-bottom: 32px; }
-.progress-dot {
-  flex: 1; height: 4px; border-radius: 2px;
-  background: var(--border); transition: background 0.4s ease;
-}
-.progress-dot.active { background: var(--accent); }
-.field-card {
-  display: block; width: 100%; text-align: left;
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
-  padding: 14px 16px; cursor: pointer; transition: all 0.2s; outline: none;
-  font-family: inherit;
-}
-.field-card.selected { background: var(--accent-bg); border: 2px solid var(--accent); }
-.field-card:hover:not(.selected) { border-color: var(--text-muted); }
-.multi-chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: 20px;
-  border: 1px solid var(--border); background: transparent;
-  cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 400;
-  color: var(--text-primary); transition: all 0.15s; outline: none;
-}
-.multi-chip.selected {
-  border: 2px solid var(--accent); background: var(--accent-bg); font-weight: 500;
-}
-.multi-chip:hover:not(.selected) { border-color: var(--text-muted); }
-.activity-card {
-  background: var(--bg-card); border-radius: 14px;
-  border: 1px solid var(--border); padding: 16px 18px;
-  cursor: pointer; transition: all 0.2s;
-}
-.activity-card:hover { border-color: var(--text-muted); }
-.activity-expand {
-  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
-  display: none;
-}
-.activity-card.open .activity-expand { display: block; }
-.activity-card.open .arrow-icon { transform: rotate(180deg); }
-.arrow-icon { transition: transform 0.2s; }
-.evidence-tag {
-  font-size: 11px; color: var(--text-muted); background: var(--bg-surface);
-  padding: 8px 12px; border-radius: 8px; line-height: 1.5;
-}
-.cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.time-label {
-  font-weight: 600; font-size: 14px; color: var(--text-primary);
-  text-transform: uppercase; letter-spacing: 0.06em;
-}
-.summary-chip {
-  display: inline-block; font-size: 11px; padding: 4px 10px;
-  border-radius: 12px; font-weight: 500;
-}
-.container { max-width: 540px; margin: 0 auto; padding: 28px 20px 48px; }
-h1.brand {
-  font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700;
-  color: var(--text-primary);
-}
-h1.plan-title {
-  font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700;
-  color: var(--text-primary); margin-bottom: 8px;
-}
-h2.step-title {
-  font-size: 20px; font-weight: 700; font-family: 'Fraunces', serif;
-  margin-bottom: 6px;
-}
-.field-label {
-  display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;
-  color: var(--text-primary);
-}
-.nav-row { display: flex; justify-content: space-between; margin-top: 32px; }
+:root{--bg-page:#FAF8F5;--bg-card:#FFF;--bg-surface:#F3F0EB;--text-primary:#1A1917;--text-muted:#8A8680;--border:#E8E4DE;--accent:#2D8F6F;--accent-bg:#E8F5EF;--accent-hover:#247A5E}
+@media(prefers-color-scheme:dark){:root{--bg-page:#141311;--bg-card:#1E1D1A;--bg-surface:#262420;--text-primary:#EDE9E3;--text-muted:#8A8680;--border:#333028;--accent:#3DB88A;--accent-bg:#1A2E25;--accent-hover:#4FCCA0}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg-page);color:var(--text-primary);min-height:100vh;-webkit-font-smoothing:antialiased}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes celebrate{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes timerPulse{0%,100%{box-shadow:0 0 0 0 rgba(45,143,111,.3)}50%{box-shadow:0 0 0 12px rgba(45,143,111,0)}}
+.fade-in{animation:fadeUp .35s ease both}
+input[type="text"],select{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg-card);color:var(--text-primary);font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none}
+input[type="text"]:focus,select:focus{border-color:var(--accent)}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8680' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:13px 30px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-primary:hover{background:var(--accent-hover)}.btn-primary:active{transform:scale(.98)}
+.btn-ghost{padding:11px 22px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;cursor:pointer;transition:all .15s}
+.btn-ghost:hover{border-color:var(--text-muted);color:var(--text-primary)}
+.btn-sm{padding:8px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-sm:hover{background:var(--accent-hover)}
+.disclaimer{font-size:11px;color:var(--text-muted);line-height:1.6;padding:12px 14px;background:var(--bg-surface);border-radius:8px;margin-top:20px}
+.progress-bar{display:flex;gap:6px;margin-bottom:32px}
+.progress-dot{flex:1;height:4px;border-radius:2px;background:var(--border);transition:background .4s}
+.progress-dot.active{background:var(--accent)}
+.field-card{display:block;width:100%;text-align:left;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .2s;outline:none;font-family:inherit}
+.field-card.selected{background:var(--accent-bg);border:2px solid var(--accent)}
+.field-card:hover:not(.selected){border-color:var(--text-muted)}
+.multi-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;cursor:pointer;font-family:inherit;font-size:13px;color:var(--text-primary);transition:all .15s;outline:none}
+.multi-chip.selected{border:2px solid var(--accent);background:var(--accent-bg);font-weight:500}
+.activity-card{background:var(--bg-card);border-radius:14px;border:1px solid var(--border);padding:16px 18px;cursor:pointer;transition:all .2s}
+.activity-card:hover{border-color:var(--text-muted)}
+.activity-expand{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:none}
+.activity-card.open .activity-expand{display:block}
+.activity-card.open .arrow-icon{transform:rotate(180deg)}
+.arrow-icon{transition:transform .2s}
+.evidence-tag{font-size:11px;color:var(--text-muted);background:var(--bg-surface);padding:8px 12px;border-radius:8px;line-height:1.5}
+.container{max-width:540px;margin:0 auto;padding:28px 20px 48px}
+h1.brand{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--text-primary)}
+h1.plan-title{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--text-primary);margin-bottom:8px}
+h2.step-title{font-size:20px;font-weight:700;font-family:'Fraunces',serif;margin-bottom:6px}
+.field-label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text-primary)}
+.nav-row{display:flex;justify-content:space-between;margin-top:32px}
+.tool-area{margin-top:14px;padding:16px;background:var(--bg-surface);border-radius:12px;cursor:default}
+.tool-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-bottom:12px}
+.feeling-face{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:12px;border:2px solid transparent;cursor:pointer;transition:all .2s;background:var(--bg-card);min-width:64px}
+.feeling-face:hover{border-color:var(--border);transform:translateY(-2px)}
+.feeling-face.picked{border-color:var(--accent);background:var(--accent-bg);animation:celebrate .4s ease}
+.feeling-face .emoji{font-size:32px;line-height:1}
+.feeling-face .flabel{font-size:10px;color:var(--text-muted);font-weight:500}
+.vstep{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-card);border-radius:10px;margin-bottom:6px;border:1px solid var(--border);cursor:pointer;transition:all .2s;user-select:none}
+.vstep.done{background:var(--accent-bg);border-color:var(--accent)}
+.vstep .vcheck{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;color:transparent;transition:all .2s}
+.vstep.done .vcheck{background:var(--accent);border-color:var(--accent);color:#fff}
+.vstep .vicon{font-size:22px;flex-shrink:0}.vstep .vtxt{font-size:13px;font-weight:500;color:var(--text-primary)}
+.vstep.done .vtxt{text-decoration:line-through;color:var(--text-muted)}
+.timer-ring{width:160px;height:160px;border-radius:50%;border:6px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;transition:border-color .3s}
+.timer-ring.running{border-color:var(--accent);animation:timerPulse 2s ease infinite}
+.timer-ring.warning{border-color:#D85A30}
+.timer-ring .timer-text{font-size:36px;font-weight:700;font-family:'DM Sans',sans-serif}
+.food-plate{display:flex;gap:12px;justify-content:center;align-items:flex-end;margin:12px 0;flex-wrap:wrap}
+.food-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border);min-width:80px;cursor:pointer;transition:all .2s}
+.food-item.tried{border-color:var(--accent);background:var(--accent-bg)}
+.food-item .ficon{font-size:28px}.food-item .fname{font-size:11px;color:var(--text-muted);font-weight:500;text-align:center}
+.food-item .fstatus{font-size:10px;color:var(--accent);font-weight:600;margin-top:2px}
+.calm-step{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border);margin-bottom:8px;transition:all .3s}
+.calm-step.active-step{border-color:var(--accent);background:var(--accent-bg);transform:scale(1.02)}
+.calm-step.completed-step{opacity:.5}
+.calm-step .cs-num{width:28px;height:28px;border-radius:50%;background:var(--bg-surface);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-muted);flex-shrink:0}
+.calm-step.active-step .cs-num,.calm-step.completed-step .cs-num{background:var(--accent);color:#fff}
+.calm-step .cs-icon{font-size:20px;flex-shrink:0}.calm-step .cs-info{flex:1}
+.calm-step .cs-title{font-size:13px;font-weight:600;color:var(--text-primary)}
+.calm-step .cs-hint{font-size:11px;color:var(--text-muted);margin-top:2px}
+.animal-card{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 8px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border);min-width:80px;cursor:pointer;transition:all .2s}
+.animal-card:hover{transform:translateY(-3px);border-color:var(--text-muted)}
+.animal-card.doing{border-color:var(--accent);background:var(--accent-bg);animation:pulse .6s ease infinite}
+.animal-card .aicon{font-size:32px}.animal-card .aname{font-size:11px;font-weight:600;color:var(--text-muted)}
+.talk-stick{display:flex;align-items:center;gap:16px;padding:14px;background:var(--bg-card);border-radius:12px;border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:all .2s}
+.talk-stick.active-turn{border-color:var(--accent);background:var(--accent-bg)}
+.talk-stick .ts-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg-surface);flex-shrink:0}
+.talk-stick.active-turn .ts-avatar{background:var(--accent)}
+.talk-stick .ts-who{font-size:13px;font-weight:600}.talk-stick .ts-prompt{font-size:11px;color:var(--text-muted)}
+.progress-mini{display:flex;gap:4px;margin-top:10px;justify-content:center}
+.progress-mini span{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .2s}
+.progress-mini span.filled{background:var(--accent)}
+@media print{.tool-area{break-inside:avoid}.btn-primary,.btn-ghost,.btn-sm{display:none!important}}
 </style>
 </head>
 <body>
 <div id="app" class="container"></div>
 <script>
-const INTAKE_STEPS = [
-  {
-    id:"welcome", title:"Let\u2019s get to know your child",
-    subtitle:"This helps us create a personalized daily plan. Nothing here is a diagnosis \u2014 it\u2019s about understanding where your child is right now.",
-    fields:[
-      {key:"childName",label:"Child\u2019s first name",type:"text",placeholder:"e.g. Aisha"},
-      {key:"age",label:"Age",type:"select",options:["3","4","5","6","7","8","9","10","11","12"]},
-      {key:"gender",label:"Gender",type:"select",options:["Girl","Boy","Non-binary","Prefer not to say"]}
-    ]
-  },
-  {
-    id:"communication", title:"Communication",
-    subtitle:"How does your child express themselves day to day?",
-    fields:[
-      {key:"verbalLevel",label:"Verbal communication level",type:"cards",options:[
-        {value:"nonverbal",label:"Non-verbal",desc:"Uses no or very few words"},
-        {value:"limited",label:"Limited speech",desc:"Uses single words or short phrases"},
-        {value:"developing",label:"Developing",desc:"Speaks in sentences but struggles with conversation"},
-        {value:"fluent",label:"Fluent",desc:"Speaks well but may have social communication challenges"}
-      ]},
-      {key:"usesAAC",label:"Does your child use any communication aids?",type:"cards",options:[
-        {value:"none",label:"None",desc:"No communication aids"},
-        {value:"pecs",label:"PECS / Picture cards",desc:"Uses picture exchange system"},
-        {value:"device",label:"AAC device or app",desc:"Uses a speech-generating device"},
-        {value:"sign",label:"Sign language",desc:"Uses signs or gestures"}
-      ]}
-    ]
-  },
-  {
-    id:"sensory", title:"Sensory profile",
-    subtitle:"Understanding sensory preferences helps us recommend the right activities.",
-    fields:[
-      {key:"sensorySeek",label:"Does your child seek or avoid these? (select all that apply)",type:"multi",options:[
-        {value:"loud_avoid",label:"Avoids loud sounds"},
-        {value:"texture_avoid",label:"Sensitive to textures (clothing/food)"},
-        {value:"movement_seek",label:"Seeks movement (spinning, jumping)"},
-        {value:"visual_avoid",label:"Overwhelmed by bright/busy visuals"},
-        {value:"deep_pressure",label:"Seeks deep pressure (tight hugs, weighted items)"},
-        {value:"taste_avoid",label:"Very selective eater"}
-      ]}
-    ]
-  },
-  {
-    id:"daily_challenges", title:"Daily life",
-    subtitle:"What are the toughest parts of a typical day?",
-    fields:[
-      {key:"challenges",label:"Top challenges (pick up to 3)",type:"multi",max:3,options:[
-        {value:"morning_routine",label:"Morning routine"},
-        {value:"mealtime",label:"Mealtimes"},
-        {value:"transitions",label:"Transitions between activities"},
-        {value:"school",label:"School participation"},
-        {value:"sleep",label:"Bedtime / sleep"},
-        {value:"meltdowns",label:"Meltdowns / emotional regulation"},
-        {value:"social",label:"Playing with other children"},
-        {value:"self_care",label:"Self-care (brushing teeth, dressing)"}
-      ]}
-    ]
-  },
-  {
-    id:"therapies", title:"Current support",
-    subtitle:"What therapies or support does your child currently receive?",
-    fields:[
-      {key:"currentTherapies",label:"Active therapies (select all)",type:"multi",options:[
-        {value:"aba",label:"ABA therapy"},
-        {value:"speech",label:"Speech therapy"},
-        {value:"ot",label:"Occupational therapy"},
-        {value:"social_group",label:"Social skills group"},
-        {value:"psych",label:"Psychology / counseling"},
-        {value:"none",label:"None currently"}
-      ]},
-      {key:"parentGoal",label:"What\u2019s the #1 thing you\u2019d like to improve?",type:"text",placeholder:"e.g. Help her communicate her feelings better"}
-    ]
-  }
-];
+const STEPS=[{id:"welcome",title:"Let\u2019s get to know your child",subtitle:"This helps us create a personalized daily plan. Nothing here is a diagnosis \u2014 it\u2019s about understanding where your child is right now.",fields:[{key:"childName",label:"Child\u2019s first name",type:"text",placeholder:"e.g. Aisha"},{key:"age",label:"Age",type:"select",options:["3","4","5","6","7","8","9","10","11","12"]},{key:"gender",label:"Gender",type:"select",options:["Girl","Boy","Non-binary","Prefer not to say"]}]},{id:"communication",title:"Communication",subtitle:"How does your child express themselves day to day?",fields:[{key:"verbalLevel",label:"Verbal communication level",type:"cards",options:[{value:"nonverbal",label:"Non-verbal",desc:"Uses no or very few words"},{value:"limited",label:"Limited speech",desc:"Uses single words or short phrases"},{value:"developing",label:"Developing",desc:"Speaks in sentences but struggles with conversation"},{value:"fluent",label:"Fluent",desc:"Speaks well but may have social communication challenges"}]},{key:"usesAAC",label:"Does your child use any communication aids?",type:"cards",options:[{value:"none",label:"None",desc:"No communication aids"},{value:"pecs",label:"PECS / Picture cards",desc:"Uses picture exchange system"},{value:"device",label:"AAC device or app",desc:"Uses a speech-generating device"},{value:"sign",label:"Sign language",desc:"Uses signs or gestures"}]}]},{id:"sensory",title:"Sensory profile",subtitle:"Understanding sensory preferences helps us recommend the right activities.",fields:[{key:"sensorySeek",label:"Does your child seek or avoid these? (select all that apply)",type:"multi",options:[{value:"loud_avoid",label:"Avoids loud sounds"},{value:"texture_avoid",label:"Sensitive to textures (clothing/food)"},{value:"movement_seek",label:"Seeks movement (spinning, jumping)"},{value:"visual_avoid",label:"Overwhelmed by bright/busy visuals"},{value:"deep_pressure",label:"Seeks deep pressure (tight hugs, weighted items)"},{value:"taste_avoid",label:"Very selective eater"}]}]},{id:"daily_challenges",title:"Daily life",subtitle:"What are the toughest parts of a typical day?",fields:[{key:"challenges",label:"Top challenges (pick up to 3)",type:"multi",max:3,options:[{value:"morning_routine",label:"Morning routine"},{value:"mealtime",label:"Mealtimes"},{value:"transitions",label:"Transitions between activities"},{value:"school",label:"School participation"},{value:"sleep",label:"Bedtime / sleep"},{value:"meltdowns",label:"Meltdowns / emotional regulation"},{value:"social",label:"Playing with other children"},{value:"self_care",label:"Self-care (brushing teeth, dressing)"}]}]},{id:"therapies",title:"Current support",subtitle:"What therapies or support does your child currently receive?",fields:[{key:"currentTherapies",label:"Active therapies (select all)",type:"multi",options:[{value:"aba",label:"ABA therapy"},{value:"speech",label:"Speech therapy"},{value:"ot",label:"Occupational therapy"},{value:"social_group",label:"Social skills group"},{value:"psych",label:"Psychology / counseling"},{value:"none",label:"None currently"}]},{key:"parentGoal",label:"What\u2019s the #1 thing you\u2019d like to improve?",type:"text",placeholder:"e.g. Help her communicate her feelings better"}]}];
 
-let state = {
-  step: 0,
-  showPlan: false,
-  profile: { age:"7", gender:"Girl", sensorySeek:[], challenges:[], currentTherapies:[] }
-};
+let S={step:0,showPlan:false,profile:{age:"7",gender:"Girl",sensorySeek:[],challenges:[],currentTherapies:[]}};
 
-function generatePlan(p) {
-  const plans = { morning:[], afternoon:[], evening:[] };
-  const n = p.childName || "your child";
+function TF(n){return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Interactive tool \u2014 use with '+n+'</div><p style="font-size:13px;color:var(--text-primary);margin-bottom:14px">Ask: \u201cWhich face matches how you feel right now?\u201d</p><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap" id="fg">'+[{e:"\ud83d\ude0a",l:"Happy"},{e:"\ud83d\ude10",l:"Okay"},{e:"\ud83d\ude1f",l:"Worried"},{e:"\ud83d\ude22",l:"Sad"},{e:"\ud83d\ude21",l:"Angry"}].map((f,i)=>'<div class="feeling-face" onclick="pF('+i+',event)" id="ff_'+i+'"><span class="emoji">'+f.e+'</span><span class="flabel">'+f.l+'</span></div>').join('')+'</div><div id="fr" style="text-align:center;margin-top:14px;font-size:13px;color:var(--text-muted);min-height:20px"></div></div>';}
 
-  if (p.verbalLevel === "nonverbal" || p.verbalLevel === "limited") {
-    plans.morning.push({title:"Picture choice breakfast",duration:"10 min",category:"Communication",color:"#1D9E75",
-      description:"Show "+n+" 2\u20133 picture cards of breakfast options. Wait 5 seconds before prompting. Celebrate any pointing, reaching, or vocalizing.",
-      evidence:"PECS Phase III \u2014 Frost & Bondy, 2002",difficulty:"Easy"});
-    plans.afternoon.push({title:"Core word practice: \u2018more\u2019 and \u2018stop\u2019",duration:"15 min",category:"Communication",color:"#1D9E75",
-      description:"During play, model \u2018more\u2019 and \u2018stop\u2019 using AAC or signs. Pause activities frequently to create natural opportunities for "+n+" to request.",
-      evidence:"Aided Language Stimulation \u2014 Goossens\u2019, 1989",difficulty:"Medium"});
-  } else {
-    plans.morning.push({title:"Feelings check-in",duration:"5 min",category:"Communication",color:"#1D9E75",
-      description:"Use a feelings chart with faces. Ask "+n+": \u201CWhich face matches how you feel right now?\u201D Accept any answer without judgment. Mirror her choice back.",
-      evidence:"Zones of Regulation \u2014 Kuypers, 2011",difficulty:"Easy"});
-    plans.afternoon.push({title:"Conversation turn-taking game",duration:"15 min",category:"Social communication",color:"#1D9E75",
-      description:"Play \u201Cmy turn, your turn\u201D \u2014 each person shares one thing about their day. Use a physical object (ball, toy) as the \u201Ctalking stick.\u201D Keep to 3\u20134 exchanges.",
-      evidence:"Social Stories & Comic Strip Conversations \u2014 Gray, 2010",difficulty:"Medium"});
-  }
+function TP(n){return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Picture choice cards \u2014 show to '+n+'</div><p style="font-size:13px;color:var(--text-primary);margin-bottom:14px">Show these cards. Wait 5 seconds. Celebrate any pointing, reaching, or vocalizing.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+[{e:"\ud83e\udd5e",l:"Pancakes"},{e:"\ud83c\udf5e",l:"Toast"},{e:"\ud83c\udf52",l:"Fruit"},{e:"\ud83e\udd63",l:"Cereal"}].map((f,i)=>'<div class="food-item" onclick="pP('+i+',event)" id="pc_'+i+'" style="min-width:90px;padding:16px 12px"><span class="ficon" style="font-size:36px">'+f.e+'</span><span class="fname" style="font-size:13px;font-weight:600">'+f.l+'</span></div>').join('')+'</div><div id="pr" style="text-align:center;margin-top:14px;font-size:13px;color:var(--accent);min-height:20px;font-weight:500"></div></div>';}
 
-  if ((p.sensorySeek||[]).includes("movement_seek")) {
-    plans.morning.push({title:"Heavy work warm-up",duration:"10 min",category:"Sensory regulation",color:"#D85A30",
-      description:"Before the day starts, do 5 minutes of \u201Canimal walks\u201D (bear walk, crab walk) followed by wall pushes. This gives "+n+" the proprioceptive input she\u2019s seeking.",
-      evidence:"Sensory Integration Theory \u2014 Ayres, 1972; updated by Schaaf & Mailloux, 2015",difficulty:"Easy"});
-  }
-  if ((p.sensorySeek||[]).includes("deep_pressure")) {
-    plans.evening.push({title:"Calm-down compression",duration:"10 min",category:"Sensory regulation",color:"#D85A30",
-      description:"Before bed, offer firm (not tight) pressure with a weighted blanket or by rolling "+n+" in a yoga mat like a \u201Cburrito.\u201D Let her control the pressure.",
-      evidence:"Deep pressure touch \u2014 Temple Grandin; Reynolds et al., 2015",difficulty:"Easy"});
-  }
-  if ((p.sensorySeek||[]).includes("texture_avoid")) {
-    plans.afternoon.push({title:"Texture exploration (gradual)",duration:"10 min",category:"Sensory tolerance",color:"#D85A30",
-      description:"Set up 3 containers: dry rice, playdough, water beads. Let "+n+" explore with a spoon first (no hand contact required). Praise any engagement. Never force.",
-      evidence:"Systematic desensitization \u2014 adapted from Wilbarger & Wilbarger, 1991",difficulty:"Medium"});
-  }
+function TT(){return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Visual transition timer</div><div class="timer-ring" id="tr"><span class="timer-text" id="tt">5:00</span></div><div style="display:flex;gap:8px;justify-content:center"><button class="btn-sm" onclick="sT(300,event)" style="background:#378ADD">5 min</button><button class="btn-sm" onclick="sT(120,event)" style="background:#D85A30">2 min</button><button class="btn-sm" onclick="sT(60,event)" style="background:#534AB7">1 min</button><button class="btn-sm" onclick="xT(event)" style="background:var(--text-muted)">Stop</button></div><p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px">Tip: show the timer to your child so they can see time shrinking</p></div>';}
 
-  if ((p.challenges||[]).includes("meltdowns")) {
-    plans.morning.push({title:"Visual calm-down plan review",duration:"5 min",category:"Emotional regulation",color:"#534AB7",
-      description:"Review the 5-step calm-down visual with "+n+" when she\u2019s regulated: 1) Notice body signals 2) Name the feeling 3) Pick a strategy 4) Do it 5) Check in. Practice when calm, not during crisis.",
-      evidence:"Cognitive Behavioral Intervention \u2014 Scarpa et al., 2013",difficulty:"Easy"});
-  }
-  if ((p.challenges||[]).includes("transitions")) {
-    plans.afternoon.push({title:"Transition timer practice",duration:"Ongoing",category:"Daily living",color:"#378ADD",
-      description:"Use a visual timer (Time Timer or phone timer showing time shrinking). Give "+n+" a 5-minute warning, then 2-minute, then \u201Ctime to switch.\u201D Pair with a transition song or phrase she likes.",
-      evidence:"Visual supports in ASD \u2014 Hume et al., 2021 (NPDC Evidence-Based Practices)",difficulty:"Easy"});
-  }
-  if ((p.challenges||[]).includes("mealtime")) {
-    plans.evening.push({title:"Food chaining dinner activity",duration:"During dinner",category:"Feeding",color:"#378ADD",
-      description:"Place one new food next to a preferred food. The rule: "+n+" just needs to have it on her plate. No pressure to taste. If she touches or smells it, that\u2019s a win. Log which foods she tolerates being near.",
-      evidence:"Food Chaining \u2014 Fraker et al., 2007",difficulty:"Easy"});
-  }
-  if ((p.challenges||[]).includes("sleep")) {
-    plans.evening.push({title:"Bedtime visual routine",duration:"20 min",category:"Sleep",color:"#534AB7",
-      description:"Use a 6-step picture sequence: 1) Bath/wash 2) Pajamas 3) Brush teeth 4) Story 5) Lights dim 6) Goodnight phrase. Keep the same order every night. Dim lights 30 min before bed.",
-      evidence:"Sleep hygiene for ASD \u2014 Malow et al., 2012 (ATN/AIR-P guidelines)",difficulty:"Easy"});
-  }
-  if ((p.challenges||[]).includes("social")) {
-    plans.afternoon.push({title:"Parallel play setup",duration:"15 min",category:"Social skills",color:"#1D9E75",
-      description:"Arrange a play date with ONE peer. Set up the same activity side by side (same puzzle, same coloring page). Don\u2019t force interaction \u2014 just proximity. Narrate: \u201CYou\u2019re both building towers!\u201D",
-      evidence:"Peer-mediated instruction \u2014 NPDC Evidence-Based Practice, 2014",difficulty:"Medium"});
-  }
-  if ((p.challenges||[]).includes("self_care")) {
-    plans.morning.push({title:"Visual task strip: getting dressed",duration:"10 min",category:"Daily living",color:"#378ADD",
-      description:"Create a vertical strip of photos showing each step: underwear \u2192 shirt \u2192 pants \u2192 socks \u2192 shoes. Let "+n+" peel off each photo as she completes it. Keep the strip in the same spot every day.",
-      evidence:"Visual activity schedules \u2014 McClannahan & Krantz, 1999",difficulty:"Easy"});
-  }
-  if ((p.challenges||[]).includes("school")) {
-    plans.morning.push({title:"School preview story",duration:"5 min",category:"Preparation",color:"#534AB7",
-      description:"Show "+n+" a simple visual schedule of today\u2019s school day (if available from teacher). Talk through: \u201CFirst circle time, then art, then lunch.\u201D Knowing what\u2019s coming reduces anxiety.",
-      evidence:"Priming \u2014 Koegel et al., 2003",difficulty:"Easy"});
-  }
+function TC(n){var st=[{i:"\ud83e\udde0",t:"Notice body signals",h:'Ask: \u201cwhere do you feel it?\u201d'},{i:"\ud83c\udff7\ufe0f",t:"Name the feeling",h:"Use the feelings chart"},{i:"\ud83e\uddf0",t:"Pick a strategy",h:"Deep breaths? Squeeze ball? Walk away?"},{i:"\u2705",t:"Do it together",h:"Model it alongside "+n},{i:"\ud83d\udd0d",t:"Check in",h:'\u201cHow does your body feel now?\u201d'}];return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Calm-down plan \u2014 practice when '+n+' is regulated</div><div id="csd">'+st.map((s,i)=>'<div class="calm-step'+(i===0?' active-step':'')+'" id="cs_'+i+'" onclick="aC('+i+',event)"><span class="cs-num">'+(i+1)+'</span><span class="cs-icon">'+s.i+'</span><div class="cs-info"><div class="cs-title">'+s.t+'</div><div class="cs-hint">'+s.h+'</div></div></div>').join('')+'</div><div style="text-align:center;margin-top:8px"><button class="btn-sm" onclick="rC(event)" style="background:var(--text-muted);font-size:11px">Reset practice</button></div></div>';}
 
-  if (plans.evening.length < 2) {
-    plans.evening.push({title:"Highlight of the day",duration:"5 min",category:"Bonding",color:"#D4537E",
-      description:"Ask "+n+": \u201CWhat was the best part of today?\u201D Use visuals or drawings if needed. Share yours too. This builds narrative skills and connection.",
-      evidence:"Joint attention & shared engagement \u2014 Kasari et al., 2006",difficulty:"Easy"});
-  }
-  if (!plans.morning.length) {
-    plans.morning.push({title:"Visual schedule review",duration:"5 min",category:"Daily living",color:"#378ADD",
-      description:"Go through today\u2019s visual schedule with "+n+". Point to each activity and say what\u2019s happening. Let her move completed items to a \u201Cdone\u201D pocket.",
-      evidence:"Visual supports \u2014 Hume et al., 2021",difficulty:"Easy"});
-  }
-  return plans;
-}
+function TB(n){var st=[{i:"\ud83d\udec1",l:"Bath / wash"},{i:"\ud83e\ude72",l:"Pajamas on"},{i:"\ud83e\udea5",l:"Brush teeth"},{i:"\ud83d\udcd6",l:"Story time"},{i:"\ud83c\udf19",l:"Lights dim"},{i:"\ud83d\udca4",l:"Goodnight!"}];return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Visual bedtime routine \u2014 check off with '+n+'</div><div id="bsd">'+st.map((s,i)=>'<div class="vstep" id="bs_'+i+'" onclick="tB('+i+',event)"><span class="vcheck">\u2713</span><span class="vicon">'+s.i+'</span><span class="vtxt">'+s.l+'</span></div>').join('')+'</div><div id="bd" style="text-align:center;margin-top:10px;font-size:13px;color:var(--accent);font-weight:600;min-height:20px"></div></div>';}
 
-function render() {
-  const app = document.getElementById("app");
-  if (state.showPlan) {
-    renderPlan(app);
-  } else {
-    renderIntake(app);
-  }
-}
+function TD(n){var st=[{i:"\ud83e\ude72",l:"Underwear"},{i:"\ud83d\udc55",l:"Shirt"},{i:"\ud83d\udc56",l:"Pants"},{i:"\ud83e\udde6",l:"Socks"},{i:"\ud83d\udc5f",l:"Shoes"}];return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Getting dressed strip \u2014 peel off with '+n+'</div><div>'+st.map((s,i)=>'<div class="vstep" id="ds_'+i+'" onclick="tD('+i+',event)"><span class="vcheck">\u2713</span><span class="vicon">'+s.i+'</span><span class="vtxt">'+s.l+'</span></div>').join('')+'</div><div id="dd" style="text-align:center;margin-top:10px;font-size:13px;color:var(--accent);font-weight:600;min-height:20px"></div></div>';}
 
-function renderIntake(app) {
-  const s = INTAKE_STEPS[state.step];
-  let html = `
-    <div style="text-align:center;margin-bottom:20px">
-      <div style="font-size:28px;margin-bottom:6px">&#127793;</div>
-      <h1 class="brand">bloom</h1>
-      <p style="font-size:12px;color:var(--text-muted);margin-top:2px">personalized developmental guidance</p>
-    </div>
-    <div class="progress-bar">
-      ${INTAKE_STEPS.map((_,i)=>`<div class="progress-dot${i<=state.step?' active':''}"></div>`).join('')}
-    </div>
-    <div class="fade-in">
-      <div style="margin-bottom:24px">
-        <h2 class="step-title">${s.title}</h2>
-        <p style="font-size:13px;color:var(--text-muted);line-height:1.5">${s.subtitle}</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:20px">
-  `;
+function TFC(n){return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Food chaining tracker \u2014 log '+n+'\u2019s response</div><p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Tap each food to cycle: on plate \u2192 touched \u2192 smelled \u2192 tasted. No pressure!</p><div class="food-plate">'+[{e:"\ud83c\udf4e",n:"Apple"},{e:"\ud83e\udd55",n:"Carrot"},{e:"\ud83e\udd66",n:"Broccoli"},{e:"\ud83e\uddc0",n:"Cheese"}].map((f,i)=>'<div class="food-item" id="fi_'+i+'" onclick="cF('+i+',event)"><span class="ficon">'+f.e+'</span><span class="fname">'+f.n+'</span><span class="fstatus" id="fs_'+i+'">Tap to log</span></div>').join('')+'</div></div>';}
 
-  for (const f of s.fields) {
-    html += `<div><label class="field-label">${f.label}${f.max?' <span style="font-weight:400;color:var(--text-muted)">(max '+f.max+')</span>':''}</label>`;
-    if (f.type === "text") {
-      html += `<input type="text" placeholder="${f.placeholder||''}" value="${state.profile[f.key]||''}" onchange="updateField('${f.key}',this.value)"/>`;
-    } else if (f.type === "select") {
-      html += `<select onchange="updateField('${f.key}',this.value)"><option value="">Select...</option>${f.options.map(o=>`<option value="${o}"${state.profile[f.key]===o?' selected':''}>${o}</option>`).join('')}</select>`;
-    } else if (f.type === "cards") {
-      html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">`;
-      for (const o of f.options) {
-        const sel = state.profile[f.key] === o.value;
-        html += `<button class="field-card${sel?' selected':''}" onclick="updateField('${f.key}','${o.value}');render()">
-          <div style="font-weight:500;font-size:14px;color:var(--text-primary);margin-bottom:2px">${o.label}</div>
-          ${o.desc?`<div style="font-size:12px;color:var(--text-muted);line-height:1.4">${o.desc}</div>`:''}
-        </button>`;
-      }
-      html += `</div>`;
-    } else if (f.type === "multi") {
-      html += `<div style="display:flex;flex-wrap:wrap;gap:8px">`;
-      for (const o of f.options) {
-        const arr = state.profile[f.key] || [];
-        const sel = arr.includes(o.value);
-        html += `<button class="multi-chip${sel?' selected':''}" onclick="toggleMulti('${f.key}','${o.value}',${f.max||0})">${sel?'&#10003; ':''}${o.label}</button>`;
-      }
-      html += `</div>`;
-    }
-    html += `</div>`;
-  }
-  html += `</div></div>`;
+function TAW(n){return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Animal walk cards \u2014 do with '+n+'</div><p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Tap an animal to start. Do it for 30\u201360 seconds, then switch!</p><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'+[{e:"\ud83d\udc3b",n:"Bear walk",d:"Hands & feet, bottom up"},{e:"\ud83e\udd80",n:"Crab walk",d:"Sit, hands back, lift"},{e:"\ud83d\udc38",n:"Frog jump",d:"Squat & leap forward"},{e:"\ud83d\udc0d",n:"Snake slither",d:"Flat on belly, wiggle"}].map((a,i)=>'<div class="animal-card" id="aw_'+i+'" onclick="pA('+i+',event)"><span class="aicon">'+a.e+'</span><span class="aname">'+a.n+'</span><span style="font-size:9px;color:var(--text-muted);text-align:center">'+a.d+'</span></div>').join('')+'</div></div>';}
 
-  if (state.step === 0) {
-    html += `<div class="disclaimer"><strong>Important:</strong> This tool does not diagnose or treat any medical condition. It provides educational activity suggestions based on published research. Always consult qualified healthcare professionals for your child\u2019s care.</div>`;
-  }
+function TTK(n){return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Conversation turn-taking game</div><p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Use a ball or toy as the \u201ctalking stick.\u201d Tap to pass the turn.</p><div id="ta"><div class="talk-stick active-turn" id="t0" onclick="sW(event)"><div class="ts-avatar">\ud83e\uddd2</div><div style="flex:1"><div class="ts-who">'+n+'\u2019s turn</div><div class="ts-prompt">\u201cShare one thing about your day\u201d</div></div></div><div class="talk-stick" id="t1" onclick="sW(event)"><div class="ts-avatar">\ud83e\uddd1</div><div style="flex:1"><div class="ts-who">Your turn</div><div class="ts-prompt">\u201cShare one thing about your day\u201d</div></div></div></div><div class="progress-mini" id="td"><span></span><span></span><span></span><span></span></div><p id="tm" style="text-align:center;margin-top:8px;font-size:12px;color:var(--accent);font-weight:500;min-height:16px"></p></div>';}
 
-  html += `<div class="nav-row">`;
-  if (state.step > 0) {
-    html += `<button class="btn-ghost" onclick="prevStep()">&larr; Back</button>`;
-  } else {
-    html += `<div></div>`;
-  }
-  html += `<button class="btn-primary" onclick="nextStep()">${state.step===INTAKE_STEPS.length-1?'Generate plan':'Continue'} &rarr;</button>`;
-  html += `</div>`;
-  app.innerHTML = html;
-}
+function TDP(n){return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 Deep pressure guide</div><div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">'+[{e:"\ud83e\uddf8",t:"Weighted blanket",d:n+" controls the weight. Start light."},{e:"\ud83c\udf2f",t:"Burrito roll",d:"Roll in yoga mat or blanket. She controls pressure."},{e:"\ud83e\udd17",t:"Firm hugs",d:"Firm, not tight. Let "+n+" say when to stop."}].map(x=>'<div style="flex:1;min-width:130px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center"><div style="font-size:28px;margin-bottom:6px">'+x.e+'</div><div style="font-size:12px;font-weight:600;color:var(--text-primary)">'+x.t+'</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px">'+x.d+'</div></div>').join('')+'</div></div>';}
 
-function renderPlan(app) {
-  const p = state.profile;
-  const plan = generatePlan(p);
-  const n = p.childName || "your child";
-  const all = [...plan.morning,...plan.afternoon,...plan.evening];
-  const totalMin = all.reduce((s,a)=>{const m=parseInt(a.duration)||0;return s+m;},0);
+function TSP(n){return'<div class="tool-area" onclick="event.stopPropagation()"><div class="tool-label">\u25b6 School day preview \u2014 walk through with '+n+'</div><p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Point to each and say \u201cFirst ___, then ___.\u201d Customize with her actual schedule.</p><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'+[{i:"\ud83d\udcac",l:"Circle time"},{i:"\ud83c\udfa8",l:"Art"},{i:"\ud83d\udcda",l:"Reading"},{i:"\ud83c\udf72",l:"Lunch"},{i:"\ud83c\udfc3",l:"Recess"},{i:"\ud83d\udcdd",l:"Work time"}].map((p,idx,arr)=>'<div style="display:flex;align-items:center;gap:6px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:8px 12px"><span style="font-size:18px">'+p.i+'</span><span style="font-size:12px;font-weight:500">'+p.l+'</span>'+(idx<arr.length-1?'<span style="color:var(--text-muted);font-size:14px">\u2192</span>':'')+'</div>').join('')+'</div></div>';}
 
-  let html = `<div class="fade-in" style="text-align:center;margin-bottom:32px">
-    <div style="font-size:28px;margin-bottom:8px">&#127793;</div>
-    <h1 class="plan-title">${n}\u2019s daily plan</h1>
-    <p style="font-size:14px;color:var(--text-muted);line-height:1.5">Personalized for a ${p.age}-year-old ${(p.gender||'child').toLowerCase()} \u2014 ${all.length} activities, ~${totalMin} minutes total</p>
-    <p style="font-size:12px;color:var(--accent);margin-top:6px;font-weight:500">Tap any activity to see details and evidence</p>
-  </div>`;
+function gP(p){var pl={morning:[],afternoon:[],evening:[]},n=p.childName||"your child";
+if(p.verbalLevel==="nonverbal"||p.verbalLevel==="limited"){pl.morning.push({title:"Picture choice breakfast",duration:"10 min",category:"Communication",color:"#1D9E75",description:"Show "+n+" 2\u20133 picture cards of breakfast options. Wait 5 seconds before prompting. Celebrate any pointing or vocalizing.",evidence:"PECS Phase III \u2014 Frost & Bondy, 2002",difficulty:"Easy",tool:TP(n)});pl.afternoon.push({title:"Core word practice: \u2018more\u2019 and \u2018stop\u2019",duration:"15 min",category:"Communication",color:"#1D9E75",description:"During play, model \u2018more\u2019 and \u2018stop\u2019 using AAC or signs. Pause frequently to create natural request opportunities.",evidence:"Aided Language Stimulation \u2014 Goossens\u2019, 1989",difficulty:"Medium"});}else{pl.morning.push({title:"Feelings check-in",duration:"5 min",category:"Communication",color:"#1D9E75",description:"Use the feelings chart below. Ask "+n+": \u201cWhich face matches how you feel right now?\u201d Accept any answer without judgment.",evidence:"Zones of Regulation \u2014 Kuypers, 2011",difficulty:"Easy",tool:TF(n)});pl.afternoon.push({title:"Conversation turn-taking game",duration:"15 min",category:"Social communication",color:"#1D9E75",description:"Play \u201cmy turn, your turn\u201d using the tool below. Keep to 3\u20134 exchanges.",evidence:"Social Stories & Comic Strip Conversations \u2014 Gray, 2010",difficulty:"Medium",tool:TTK(n)});}
+if((p.sensorySeek||[]).includes("movement_seek"))pl.morning.push({title:"Heavy work warm-up",duration:"10 min",category:"Sensory regulation",color:"#D85A30",description:"Do 5 minutes of animal walks followed by wall pushes for proprioceptive input.",evidence:"Sensory Integration Theory \u2014 Ayres, 1972; Schaaf & Mailloux, 2015",difficulty:"Easy",tool:TAW(n)});
+if((p.sensorySeek||[]).includes("deep_pressure"))pl.evening.push({title:"Calm-down compression",duration:"10 min",category:"Sensory regulation",color:"#D85A30",description:"Before bed, offer firm (not tight) pressure. Let "+n+" control the intensity.",evidence:"Deep pressure touch \u2014 Temple Grandin; Reynolds et al., 2015",difficulty:"Easy",tool:TDP(n)});
+if((p.sensorySeek||[]).includes("texture_avoid"))pl.afternoon.push({title:"Texture exploration (gradual)",duration:"10 min",category:"Sensory tolerance",color:"#D85A30",description:"Set up 3 containers: dry rice, playdough, water beads. Spoon first. Praise any engagement. Never force.",evidence:"Systematic desensitization \u2014 Wilbarger & Wilbarger, 1991",difficulty:"Medium"});
+if((p.challenges||[]).includes("meltdowns"))pl.morning.push({title:"Visual calm-down plan review",duration:"5 min",category:"Emotional regulation",color:"#534AB7",description:"Walk through each step below with "+n+" when she\u2019s calm. Tap each step to practice.",evidence:"Cognitive Behavioral Intervention \u2014 Scarpa et al., 2013",difficulty:"Easy",tool:TC(n)});
+if((p.challenges||[]).includes("transitions"))pl.afternoon.push({title:"Transition timer practice",duration:"Ongoing",category:"Daily living",color:"#378ADD",description:"Use the visual timer below. Give 5-min warning, then 2-min, then \u201ctime to switch.\u201d",evidence:"Visual supports in ASD \u2014 Hume et al., 2021 (NPDC)",difficulty:"Easy",tool:TT()});
+if((p.challenges||[]).includes("mealtime"))pl.evening.push({title:"Food chaining dinner activity",duration:"During dinner",category:"Feeding",color:"#378ADD",description:"Place new foods next to preferred ones. Use the tracker below. No pressure to taste!",evidence:"Food Chaining \u2014 Fraker et al., 2007",difficulty:"Easy",tool:TFC(n)});
+if((p.challenges||[]).includes("sleep"))pl.evening.push({title:"Bedtime visual routine",duration:"20 min",category:"Sleep",color:"#534AB7",description:"Follow the visual sequence below. Same order every night. Dim lights 30 min before bed.",evidence:"Sleep hygiene for ASD \u2014 Malow et al., 2012 (ATN/AIR-P)",difficulty:"Easy",tool:TB(n)});
+if((p.challenges||[]).includes("social"))pl.afternoon.push({title:"Parallel play setup",duration:"15 min",category:"Social skills",color:"#1D9E75",description:"Arrange a play date with ONE peer. Same activity side by side. Don\u2019t force interaction \u2014 just proximity.",evidence:"Peer-mediated instruction \u2014 NPDC, 2014",difficulty:"Medium"});
+if((p.challenges||[]).includes("self_care"))pl.morning.push({title:"Visual task strip: getting dressed",duration:"10 min",category:"Daily living",color:"#378ADD",description:"Use the strip below. Let "+n+" check off each step as she completes it.",evidence:"Visual activity schedules \u2014 McClannahan & Krantz, 1999",difficulty:"Easy",tool:TD(n)});
+if((p.challenges||[]).includes("school"))pl.morning.push({title:"School preview story",duration:"5 min",category:"Preparation",color:"#534AB7",description:"Walk through today\u2019s school day below. Customize with her real schedule.",evidence:"Priming \u2014 Koegel et al., 2003",difficulty:"Easy",tool:TSP(n)});
+if(pl.evening.length<2)pl.evening.push({title:"Highlight of the day",duration:"5 min",category:"Bonding",color:"#D4537E",description:"Ask "+n+": \u201cWhat was the best part of today?\u201d Use visuals or drawings if needed. Share yours too.",evidence:"Joint attention & shared engagement \u2014 Kasari et al., 2006",difficulty:"Easy"});
+if(!pl.morning.length)pl.morning.push({title:"Visual schedule review",duration:"5 min",category:"Daily living",color:"#378ADD",description:"Go through today\u2019s visual schedule with "+n+". Point to each activity.",evidence:"Visual supports \u2014 Hume et al., 2021",difficulty:"Easy"});
+return pl;}
 
-  // Summary chips
-  html += `<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:28px">`;
-  for (const c of (p.challenges||[]).slice(0,3)) {
-    html += `<span class="summary-chip" style="background:var(--accent-bg);color:var(--accent)">${c.replace(/_/g,' ')}</span>`;
-  }
-  if (p.verbalLevel) {
-    html += `<span class="summary-chip" style="background:var(--bg-surface);color:var(--text-muted)">${p.verbalLevel} speech</span>`;
-  }
-  html += `</div>`;
+// Handlers
+var tI=null,tS=0,tC=0,cT=true,fS=[0,0,0,0];
+var fL=["On plate","Touched","Smelled","Tasted!"];
+function pF(i,e){e.stopPropagation();var r=["That\u2019s wonderful! \u201cI see you\u2019re feeling happy!\u201d","\u201cOkay is a feeling too. Thanks for telling me.\u201d","\u201cI hear you\u2019re worried. Where do you feel it?\u201d","\u201cIt\u2019s okay to feel sad. I\u2019m here with you.\u201d","\u201cYou\u2019re feeling angry. Let\u2019s breathe together.\u201d"];for(var j=0;j<5;j++){var el=document.getElementById('ff_'+j);if(el)el.classList.toggle('picked',j===i);}var fr=document.getElementById('fr');if(fr)fr.innerHTML='<span style="color:var(--accent);font-weight:500">'+r[i]+'</span>';}
+function pP(i,e){e.stopPropagation();var l=["Pancakes","Toast","Fruit","Cereal"];for(var j=0;j<4;j++){var el=document.getElementById('pc_'+j);if(el)el.classList.toggle('tried',j===i);}var pr=document.getElementById('pr');if(pr)pr.textContent="\ud83c\udf89 Great job choosing "+l[i]+"!";}
+function sT(s,e){e.stopPropagation();xT(e);tS=s;uT();var r=document.getElementById('tr');if(r){r.classList.add('running');r.classList.remove('warning');}tI=setInterval(function(){tS--;if(tS<=10&&tS>0){var r=document.getElementById('tr');if(r){r.classList.add('warning');r.classList.remove('running');}}if(tS<=0){xT();var t=document.getElementById('tt');if(t)t.textContent="Done!";var r=document.getElementById('tr');if(r)r.classList.remove('running','warning');}else uT();},1000);}
+function xT(e){if(e)e.stopPropagation();if(tI){clearInterval(tI);tI=null;}var r=document.getElementById('tr');if(r)r.classList.remove('running','warning');}
+function uT(){var m=Math.floor(tS/60),s=tS%60,t=document.getElementById('tt');if(t)t.textContent=m+':'+(s<10?'0':'')+s;}
+var cI=0;
+function aC(i,e){e.stopPropagation();cI=i+1;for(var j=0;j<5;j++){var el=document.getElementById('cs_'+j);if(!el)continue;el.classList.remove('active-step','completed-step');if(j<cI)el.classList.add('completed-step');else if(j===cI)el.classList.add('active-step');}}
+function rC(e){e.stopPropagation();cI=0;for(var j=0;j<5;j++){var el=document.getElementById('cs_'+j);if(!el)continue;el.classList.remove('active-step','completed-step');if(j===0)el.classList.add('active-step');}}
+function tB(i,e){e.stopPropagation();var el=document.getElementById('bs_'+i);if(el)el.classList.toggle('done');cAD('bs_',6,'bd','\ud83c\udf1f All done! Sweet dreams!');}
+function tD(i,e){e.stopPropagation();var el=document.getElementById('ds_'+i);if(el)el.classList.toggle('done');cAD('ds_',5,'dd','\ud83c\udf89 All dressed! Great job!');}
+function cAD(p,c,d,m){var ok=true;for(var i=0;i<c;i++){var el=document.getElementById(p+i);if(el&&!el.classList.contains('done')){ok=false;break;}}var de=document.getElementById(d);if(de)de.textContent=ok?m:'';}
+function cF(i,e){e.stopPropagation();fS[i]=(fS[i]+1)%(fL.length+1);var el=document.getElementById('fi_'+i),st=document.getElementById('fs_'+i);if(fS[i]===0){if(el)el.classList.remove('tried');if(st)st.textContent='Tap to log';}else{if(el)el.classList.add('tried');if(st)st.textContent=fL[fS[i]-1];}}
+function pA(i,e){e.stopPropagation();for(var j=0;j<4;j++){var el=document.getElementById('aw_'+j);if(el)el.classList.toggle('doing',j===i);}}
+function sW(e){e.stopPropagation();cT=!cT;tC++;var a=document.getElementById('t0'),b=document.getElementById('t1');if(a)a.classList.toggle('active-turn',cT);if(b)b.classList.toggle('active-turn',!cT);var dots=document.querySelectorAll('#td span');for(var i=0;i<dots.length;i++)dots[i].classList.toggle('filled',i<Math.min(tC,4));if(tC>=4){var m=document.getElementById('tm');if(m)m.textContent='\ud83c\udf89 4 exchanges done! Great conversation!';}}
 
-  const blocks = [
-    {label:"Morning",emoji:"&#9728;&#65039;",items:plan.morning},
-    {label:"Afternoon",emoji:"&#127774;",items:plan.afternoon},
-    {label:"Evening",emoji:"&#127769;",items:plan.evening}
-  ];
+function render(){var app=document.getElementById("app");S.showPlan?rPlan(app):rIntake(app);}
+function rIntake(app){var s=STEPS[S.step];var h='<div style="text-align:center;margin-bottom:20px"><div style="font-size:28px;margin-bottom:6px">&#127793;</div><h1 class="brand">bloom</h1><p style="font-size:12px;color:var(--text-muted);margin-top:2px">personalized developmental guidance</p></div><div class="progress-bar">'+STEPS.map(function(_,i){return'<div class="progress-dot'+(i<=S.step?' active':'')+'"></div>';}).join('')+'</div><div class="fade-in"><div style="margin-bottom:24px"><h2 class="step-title">'+s.title+'</h2><p style="font-size:13px;color:var(--text-muted);line-height:1.5">'+s.subtitle+'</p></div><div style="display:flex;flex-direction:column;gap:20px">';
+s.fields.forEach(function(f){h+='<div><label class="field-label">'+f.label+(f.max?' <span style="font-weight:400;color:var(--text-muted)">(max '+f.max+')</span>':'')+'</label>';
+if(f.type==="text")h+='<input type="text" placeholder="'+(f.placeholder||'')+'" value="'+(S.profile[f.key]||'')+'" onchange="uF(\''+f.key+'\',this.value)"/>';
+else if(f.type==="select")h+='<select onchange="uF(\''+f.key+'\',this.value)"><option value="">Select...</option>'+f.options.map(function(o){return'<option value="'+o+'"'+(S.profile[f.key]===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select>';
+else if(f.type==="cards"){h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';f.options.forEach(function(o){h+='<button class="field-card'+(S.profile[f.key]===o.value?' selected':'')+'" onclick="uF(\''+f.key+'\',\''+o.value+'\');render()"><div style="font-weight:500;font-size:14px;color:var(--text-primary);margin-bottom:2px">'+o.label+'</div>'+(o.desc?'<div style="font-size:12px;color:var(--text-muted);line-height:1.4">'+o.desc+'</div>':'')+'</button>';});h+='</div>';}
+else if(f.type==="multi"){h+='<div style="display:flex;flex-wrap:wrap;gap:8px">';f.options.forEach(function(o){var sel=(S.profile[f.key]||[]).includes(o.value);h+='<button class="multi-chip'+(sel?' selected':'')+'" onclick="tM(\''+f.key+'\',\''+o.value+'\','+(f.max||0)+')">'+(sel?'&#10003; ':'')+o.label+'</button>';});h+='</div>';}
+h+='</div>';});
+h+='</div></div>';
+if(S.step===0)h+='<div class="disclaimer"><strong>Important:</strong> This tool does not diagnose or treat any medical condition. It provides educational activity suggestions based on published research. Always consult qualified healthcare professionals for your child\u2019s care.</div>';
+h+='<div class="nav-row">'+(S.step>0?'<button class="btn-ghost" onclick="pS()">&larr; Back</button>':'<div></div>')+'<button class="btn-primary" onclick="nS()">'+(S.step===STEPS.length-1?'Generate plan':'Continue')+' &rarr;</button></div>';
+app.innerHTML=h;}
 
-  for (const b of blocks) {
-    html += `<div style="margin-bottom:28px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-        <span style="font-size:15px">${b.emoji}</span>
-        <span class="time-label">${b.label}</span>
-        <span style="font-size:12px;color:var(--text-muted)">${b.items.length} ${b.items.length===1?'activity':'activities'}</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px">`;
-    for (let i=0; i<b.items.length; i++) {
-      const a = b.items[i];
-      const uid = b.label+'_'+i;
-      html += `<div class="activity-card" id="ac_${uid}" onclick="toggleActivity('${uid}')" style="animation:fadeUp 0.4s ease ${i*0.08}s both">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-              <span class="cat-dot" style="background:${a.color}"></span>
-              <span style="font-size:11px;color:${a.color};font-weight:600;text-transform:uppercase;letter-spacing:0.05em">${a.category}</span>
-            </div>
-            <div style="font-weight:600;font-size:15px;color:var(--text-primary);margin-bottom:4px">${a.title}</div>
-            <div style="display:flex;gap:10px;font-size:12px;color:var(--text-muted)">
-              <span>${a.duration}</span><span style="opacity:0.4">|</span><span>${a.difficulty}</span>
-            </div>
-          </div>
-          <span class="arrow-icon" style="font-size:18px;color:var(--text-muted);margin-top:4px;flex-shrink:0">&#8964;</span>
-        </div>
-        <div class="activity-expand">
-          <p style="font-size:14px;line-height:1.65;color:var(--text-primary);margin:0 0 12px">${a.description}</p>
-          <div class="evidence-tag"><span style="font-weight:600">Evidence basis:</span> ${a.evidence}</div>
-        </div>
-      </div>`;
-    }
-    html += `</div></div>`;
-  }
+function rPlan(app){var p=S.profile,plan=gP(p),n=p.childName||"your child";var all=[].concat(plan.morning,plan.afternoon,plan.evening);var tm=all.reduce(function(s,a){return s+(parseInt(a.duration)||0);},0);
+var h='<div class="fade-in" style="text-align:center;margin-bottom:32px"><div style="font-size:28px;margin-bottom:8px">&#127793;</div><h1 class="plan-title">'+n+'\u2019s daily plan</h1><p style="font-size:14px;color:var(--text-muted);line-height:1.5">Personalized for a '+p.age+'-year-old '+(p.gender||'child').toLowerCase()+' \u2014 '+all.length+' activities, ~'+tm+' minutes total</p><p style="font-size:12px;color:var(--accent);margin-top:6px;font-weight:500">Tap any activity to open its interactive tool</p></div>';
+h+='<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:28px">';
+(p.challenges||[]).slice(0,3).forEach(function(c){h+='<span class="summary-chip" style="background:var(--accent-bg);color:var(--accent)">'+c.replace(/_/g,' ')+'</span>';});
+if(p.verbalLevel)h+='<span class="summary-chip" style="background:var(--bg-surface);color:var(--text-muted)">'+p.verbalLevel+' speech</span>';
+h+='</div>';
+[{l:"Morning",e:"&#9728;&#65039;",it:plan.morning},{l:"Afternoon",e:"&#127774;",it:plan.afternoon},{l:"Evening",e:"&#127769;",it:plan.evening}].forEach(function(b){
+h+='<div style="margin-bottom:28px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><span style="font-size:15px">'+b.e+'</span><span class="time-label">'+b.l+'</span><span style="font-size:12px;color:var(--text-muted)">'+b.it.length+' '+(b.it.length===1?'activity':'activities')+'</span></div><div style="display:flex;flex-direction:column;gap:10px">';
+b.it.forEach(function(a,i){var uid=b.l+'_'+i;
+h+='<div class="activity-card" id="ac_'+uid+'" onclick="tA(\''+uid+'\')" style="animation:fadeUp .4s ease '+(i*.08)+'s both"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px"><div style="flex:1"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="cat-dot" style="background:'+a.color+'"></span><span style="font-size:11px;color:'+a.color+';font-weight:600;text-transform:uppercase;letter-spacing:.05em">'+a.category+'</span>'+(a.tool?'<span style="font-size:9px;background:var(--accent-bg);color:var(--accent);padding:2px 6px;border-radius:6px;font-weight:600">INTERACTIVE</span>':'')+'</div><div style="font-weight:600;font-size:15px;color:var(--text-primary);margin-bottom:4px">'+a.title+'</div><div style="display:flex;gap:10px;font-size:12px;color:var(--text-muted)"><span>'+a.duration+'</span><span style="opacity:.4">|</span><span>'+a.difficulty+'</span></div></div><span class="arrow-icon" style="font-size:18px;color:var(--text-muted);margin-top:4px;flex-shrink:0">&#8964;</span></div><div class="activity-expand"><p style="font-size:14px;line-height:1.65;color:var(--text-primary);margin:0 0 12px">'+a.description+'</p>'+(a.tool||'')+'<div class="evidence-tag" style="margin-top:12px"><span style="font-weight:600">Evidence basis:</span> '+a.evidence+'</div></div></div>';});
+h+='</div></div>';});
+h+='<div class="disclaimer"><strong>Important:</strong> This plan is for educational support only and does not replace professional therapy or medical advice. All activities are sourced from published, peer-reviewed research and evidence-based practice guidelines. Consult your child\u2019s therapy team before making changes to their program.</div>';
+h+='<div style="display:flex;justify-content:center;gap:12px;margin-top:24px"><button class="btn-ghost" onclick="gB()">&larr; Edit profile</button><button class="btn-primary" onclick="window.print()">&#128438; Print plan</button></div>';
+app.innerHTML=h;}
 
-  html += `<div class="disclaimer"><strong>Important:</strong> This plan is for educational support only and does not replace professional therapy or medical advice. All activities are sourced from published, peer-reviewed research and evidence-based practice guidelines. Consult your child\u2019s therapy team before making changes to their program.</div>`;
-  html += `<div style="display:flex;justify-content:center;gap:12px;margin-top:24px">
-    <button class="btn-ghost" onclick="goBackToEdit()">&larr; Edit profile</button>
-    <button class="btn-primary" onclick="window.print()">&#128438; Print plan</button>
-  </div>`;
-
-  app.innerHTML = html;
-}
-
-function updateField(key, value) {
-  state.profile[key] = value;
-}
-
-function toggleMulti(key, value, max) {
-  const arr = state.profile[key] || [];
-  if (arr.includes(value)) {
-    state.profile[key] = arr.filter(v=>v!==value);
-  } else {
-    if (max && arr.length >= max) return;
-    state.profile[key] = [...arr, value];
-  }
-  render();
-}
-
-function nextStep() {
-  if (state.step < INTAKE_STEPS.length - 1) {
-    state.step++;
-  } else {
-    state.showPlan = true;
-  }
-  render();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function prevStep() {
-  if (state.step > 0) {
-    state.step--;
-    render();
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-}
-
-function goBackToEdit() {
-  state.showPlan = false;
-  render();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function toggleActivity(uid) {
-  const el = document.getElementById('ac_'+uid);
-  if (el) el.classList.toggle('open');
-}
-
+function uF(k,v){S.profile[k]=v;}
+function tM(k,v,m){var a=S.profile[k]||[];if(a.includes(v))S.profile[k]=a.filter(function(x){return x!==v;});else{if(m&&a.length>=m)return;S.profile[k]=a.concat(v);}render();}
+function nS(){if(S.step<STEPS.length-1)S.step++;else S.showPlan=true;render();window.scrollTo({top:0,behavior:'smooth'});}
+function pS(){if(S.step>0){S.step--;render();window.scrollTo({top:0,behavior:'smooth'});}}
+function gB(){S.showPlan=false;render();window.scrollTo({top:0,behavior:'smooth'});}
+function tA(u){var el=document.getElementById('ac_'+u);if(el)el.classList.toggle('open');}
 render();
 </script>
 </body>
