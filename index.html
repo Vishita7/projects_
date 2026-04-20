@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bloom — Personalized Developmental Guidance</title>
+<meta name="description" content="Evidence-based daily activity plans for parents of children with autism and developmental conditions."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg-page: #FAF8F5;
+  --bg-card: #FFFFFF;
+  --bg-surface: #F3F0EB;
+  --text-primary: #1A1917;
+  --text-muted: #8A8680;
+  --border: #E8E4DE;
+  --accent: #2D8F6F;
+  --accent-bg: #E8F5EF;
+  --accent-hover: #247A5E;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #141311;
+    --bg-card: #1E1D1A;
+    --bg-surface: #262420;
+    --text-primary: #EDE9E3;
+    --text-muted: #8A8680;
+    --border: #333028;
+    --accent: #3DB88A;
+    --accent-bg: #1A2E25;
+    --accent-hover: #4FCCA0;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeUp 0.35s ease both; }
+input[type="text"], select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input[type="text"]:focus, select:focus { border-color: var(--accent); }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8680' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 30px;
+  background: var(--accent); color: #fff; border: none; border-radius: 10px;
+  font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-ghost {
+  padding: 11px 22px;
+  background: transparent; color: var(--text-muted);
+  border: 1px solid var(--border); border-radius: 10px;
+  font-family: inherit; font-size: 13px; cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-ghost:hover { border-color: var(--text-muted); color: var(--text-primary); }
+.disclaimer {
+  font-size: 11px; color: var(--text-muted); line-height: 1.6;
+  padding: 12px 14px; background: var(--bg-surface); border-radius: 8px; margin-top: 20px;
+}
+.progress-bar { display: flex; gap: 6px; margin-bottom: 32px; }
+.progress-dot {
+  flex: 1; height: 4px; border-radius: 2px;
+  background: var(--border); transition: background 0.4s ease;
+}
+.progress-dot.active { background: var(--accent); }
+.field-card {
+  display: block; width: 100%; text-align: left;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; cursor: pointer; transition: all 0.2s; outline: none;
+  font-family: inherit;
+}
+.field-card.selected { background: var(--accent-bg); border: 2px solid var(--accent); }
+.field-card:hover:not(.selected) { border-color: var(--text-muted); }
+.multi-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 20px;
+  border: 1px solid var(--border); background: transparent;
+  cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 400;
+  color: var(--text-primary); transition: all 0.15s; outline: none;
+}
+.multi-chip.selected {
+  border: 2px solid var(--accent); background: var(--accent-bg); font-weight: 500;
+}
+.multi-chip:hover:not(.selected) { border-color: var(--text-muted); }
+.activity-card {
+  background: var(--bg-card); border-radius: 14px;
+  border: 1px solid var(--border); padding: 16px 18px;
+  cursor: pointer; transition: all 0.2s;
+}
+.activity-card:hover { border-color: var(--text-muted); }
+.activity-expand {
+  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+  display: none;
+}
+.activity-card.open .activity-expand { display: block; }
+.activity-card.open .arrow-icon { transform: rotate(180deg); }
+.arrow-icon { transition: transform 0.2s; }
+.evidence-tag {
+  font-size: 11px; color: var(--text-muted); background: var(--bg-surface);
+  padding: 8px 12px; border-radius: 8px; line-height: 1.5;
+}
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.time-label {
+  font-weight: 600; font-size: 14px; color: var(--text-primary);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.summary-chip {
+  display: inline-block; font-size: 11px; padding: 4px 10px;
+  border-radius: 12px; font-weight: 500;
+}
+.container { max-width: 540px; margin: 0 auto; padding: 28px 20px 48px; }
+h1.brand {
+  font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700;
+  color: var(--text-primary);
+}
+h1.plan-title {
+  font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 8px;
+}
+h2.step-title {
+  font-size: 20px; font-weight: 700; font-family: 'Fraunces', serif;
+  margin-bottom: 6px;
+}
+.field-label {
+  display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px;
+  color: var(--text-primary);
+}
+.nav-row { display: flex; justify-content: space-between; margin-top: 32px; }
+</style>
+</head>
+<body>
+<div id="app" class="container"></div>
+<script>
+const INTAKE_STEPS = [
+  {
+    id:"welcome", title:"Let\u2019s get to know your child",
+    subtitle:"This helps us create a personalized daily plan. Nothing here is a diagnosis \u2014 it\u2019s about understanding where your child is right now.",
+    fields:[
+      {key:"childName",label:"Child\u2019s first name",type:"text",placeholder:"e.g. Aisha"},
+      {key:"age",label:"Age",type:"select",options:["3","4","5","6","7","8","9","10","11","12"]},
+      {key:"gender",label:"Gender",type:"select",options:["Girl","Boy","Non-binary","Prefer not to say"]}
+    ]
+  },
+  {
+    id:"communication", title:"Communication",
+    subtitle:"How does your child express themselves day to day?",
+    fields:[
+      {key:"verbalLevel",label:"Verbal communication level",type:"cards",options:[
+        {value:"nonverbal",label:"Non-verbal",desc:"Uses no or very few words"},
+        {value:"limited",label:"Limited speech",desc:"Uses single words or short phrases"},
+        {value:"developing",label:"Developing",desc:"Speaks in sentences but struggles with conversation"},
+        {value:"fluent",label:"Fluent",desc:"Speaks well but may have social communication challenges"}
+      ]},
+      {key:"usesAAC",label:"Does your child use any communication aids?",type:"cards",options:[
+        {value:"none",label:"None",desc:"No communication aids"},
+        {value:"pecs",label:"PECS / Picture cards",desc:"Uses picture exchange system"},
+        {value:"device",label:"AAC device or app",desc:"Uses a speech-generating device"},
+        {value:"sign",label:"Sign language",desc:"Uses signs or gestures"}
+      ]}
+    ]
+  },
+  {
+    id:"sensory", title:"Sensory profile",
+    subtitle:"Understanding sensory preferences helps us recommend the right activities.",
+    fields:[
+      {key:"sensorySeek",label:"Does your child seek or avoid these? (select all that apply)",type:"multi",options:[
+        {value:"loud_avoid",label:"Avoids loud sounds"},
+        {value:"texture_avoid",label:"Sensitive to textures (clothing/food)"},
+        {value:"movement_seek",label:"Seeks movement (spinning, jumping)"},
+        {value:"visual_avoid",label:"Overwhelmed by bright/busy visuals"},
+        {value:"deep_pressure",label:"Seeks deep pressure (tight hugs, weighted items)"},
+        {value:"taste_avoid",label:"Very selective eater"}
+      ]}
+    ]
+  },
+  {
+    id:"daily_challenges", title:"Daily life",
+    subtitle:"What are the toughest parts of a typical day?",
+    fields:[
+      {key:"challenges",label:"Top challenges (pick up to 3)",type:"multi",max:3,options:[
+        {value:"morning_routine",label:"Morning routine"},
+        {value:"mealtime",label:"Mealtimes"},
+        {value:"transitions",label:"Transitions between activities"},
+        {value:"school",label:"School participation"},
+        {value:"sleep",label:"Bedtime / sleep"},
+        {value:"meltdowns",label:"Meltdowns / emotional regulation"},
+        {value:"social",label:"Playing with other children"},
+        {value:"self_care",label:"Self-care (brushing teeth, dressing)"}
+      ]}
+    ]
+  },
+  {
+    id:"therapies", title:"Current support",
+    subtitle:"What therapies or support does your child currently receive?",
+    fields:[
+      {key:"currentTherapies",label:"Active therapies (select all)",type:"multi",options:[
+        {value:"aba",label:"ABA therapy"},
+        {value:"speech",label:"Speech therapy"},
+        {value:"ot",label:"Occupational therapy"},
+        {value:"social_group",label:"Social skills group"},
+        {value:"psych",label:"Psychology / counseling"},
+        {value:"none",label:"None currently"}
+      ]},
+      {key:"parentGoal",label:"What\u2019s the #1 thing you\u2019d like to improve?",type:"text",placeholder:"e.g. Help her communicate her feelings better"}
+    ]
+  }
+];
+
+let state = {
+  step: 0,
+  showPlan: false,
+  profile: { age:"7", gender:"Girl", sensorySeek:[], challenges:[], currentTherapies:[] }
+};
+
+function generatePlan(p) {
+  const plans = { morning:[], afternoon:[], evening:[] };
+  const n = p.childName || "your child";
+
+  if (p.verbalLevel === "nonverbal" || p.verbalLevel === "limited") {
+    plans.morning.push({title:"Picture choice breakfast",duration:"10 min",category:"Communication",color:"#1D9E75",
+      description:"Show "+n+" 2\u20133 picture cards of breakfast options. Wait 5 seconds before prompting. Celebrate any pointing, reaching, or vocalizing.",
+      evidence:"PECS Phase III \u2014 Frost & Bondy, 2002",difficulty:"Easy"});
+    plans.afternoon.push({title:"Core word practice: \u2018more\u2019 and \u2018stop\u2019",duration:"15 min",category:"Communication",color:"#1D9E75",
+      description:"During play, model \u2018more\u2019 and \u2018stop\u2019 using AAC or signs. Pause activities frequently to create natural opportunities for "+n+" to request.",
+      evidence:"Aided Language Stimulation \u2014 Goossens\u2019, 1989",difficulty:"Medium"});
+  } else {
+    plans.morning.push({title:"Feelings check-in",duration:"5 min",category:"Communication",color:"#1D9E75",
+      description:"Use a feelings chart with faces. Ask "+n+": \u201CWhich face matches how you feel right now?\u201D Accept any answer without judgment. Mirror her choice back.",
+      evidence:"Zones of Regulation \u2014 Kuypers, 2011",difficulty:"Easy"});
+    plans.afternoon.push({title:"Conversation turn-taking game",duration:"15 min",category:"Social communication",color:"#1D9E75",
+      description:"Play \u201Cmy turn, your turn\u201D \u2014 each person shares one thing about their day. Use a physical object (ball, toy) as the \u201Ctalking stick.\u201D Keep to 3\u20134 exchanges.",
+      evidence:"Social Stories & Comic Strip Conversations \u2014 Gray, 2010",difficulty:"Medium"});
+  }
+
+  if ((p.sensorySeek||[]).includes("movement_seek")) {
+    plans.morning.push({title:"Heavy work warm-up",duration:"10 min",category:"Sensory regulation",color:"#D85A30",
+      description:"Before the day starts, do 5 minutes of \u201Canimal walks\u201D (bear walk, crab walk) followed by wall pushes. This gives "+n+" the proprioceptive input she\u2019s seeking.",
+      evidence:"Sensory Integration Theory \u2014 Ayres, 1972; updated by Schaaf & Mailloux, 2015",difficulty:"Easy"});
+  }
+  if ((p.sensorySeek||[]).includes("deep_pressure")) {
+    plans.evening.push({title:"Calm-down compression",duration:"10 min",category:"Sensory regulation",color:"#D85A30",
+      description:"Before bed, offer firm (not tight) pressure with a weighted blanket or by rolling "+n+" in a yoga mat like a \u201Cburrito.\u201D Let her control the pressure.",
+      evidence:"Deep pressure touch \u2014 Temple Grandin; Reynolds et al., 2015",difficulty:"Easy"});
+  }
+  if ((p.sensorySeek||[]).includes("texture_avoid")) {
+    plans.afternoon.push({title:"Texture exploration (gradual)",duration:"10 min",category:"Sensory tolerance",color:"#D85A30",
+      description:"Set up 3 containers: dry rice, playdough, water beads. Let "+n+" explore with a spoon first (no hand contact required). Praise any engagement. Never force.",
+      evidence:"Systematic desensitization \u2014 adapted from Wilbarger & Wilbarger, 1991",difficulty:"Medium"});
+  }
+
+  if ((p.challenges||[]).includes("meltdowns")) {
+    plans.morning.push({title:"Visual calm-down plan review",duration:"5 min",category:"Emotional regulation",color:"#534AB7",
+      description:"Review the 5-step calm-down visual with "+n+" when she\u2019s regulated: 1) Notice body signals 2) Name the feeling 3) Pick a strategy 4) Do it 5) Check in. Practice when calm, not during crisis.",
+      evidence:"Cognitive Behavioral Intervention \u2014 Scarpa et al., 2013",difficulty:"Easy"});
+  }
+  if ((p.challenges||[]).includes("transitions")) {
+    plans.afternoon.push({title:"Transition timer practice",duration:"Ongoing",category:"Daily living",color:"#378ADD",
+      description:"Use a visual timer (Time Timer or phone timer showing time shrinking). Give "+n+" a 5-minute warning, then 2-minute, then \u201Ctime to switch.\u201D Pair with a transition song or phrase she likes.",
+      evidence:"Visual supports in ASD \u2014 Hume et al., 2021 (NPDC Evidence-Based Practices)",difficulty:"Easy"});
+  }
+  if ((p.challenges||[]).includes("mealtime")) {
+    plans.evening.push({title:"Food chaining dinner activity",duration:"During dinner",category:"Feeding",color:"#378ADD",
+      description:"Place one new food next to a preferred food. The rule: "+n+" just needs to have it on her plate. No pressure to taste. If she touches or smells it, that\u2019s a win. Log which foods she tolerates being near.",
+      evidence:"Food Chaining \u2014 Fraker et al., 2007",difficulty:"Easy"});
+  }
+  if ((p.challenges||[]).includes("sleep")) {
+    plans.evening.push({title:"Bedtime visual routine",duration:"20 min",category:"Sleep",color:"#534AB7",
+      description:"Use a 6-step picture sequence: 1) Bath/wash 2) Pajamas 3) Brush teeth 4) Story 5) Lights dim 6) Goodnight phrase. Keep the same order every night. Dim lights 30 min before bed.",
+      evidence:"Sleep hygiene for ASD \u2014 Malow et al., 2012 (ATN/AIR-P guidelines)",difficulty:"Easy"});
+  }
+  if ((p.challenges||[]).includes("social")) {
+    plans.afternoon.push({title:"Parallel play setup",duration:"15 min",category:"Social skills",color:"#1D9E75",
+      description:"Arrange a play date with ONE peer. Set up the same activity side by side (same puzzle, same coloring page). Don\u2019t force interaction \u2014 just proximity. Narrate: \u201CYou\u2019re both building towers!\u201D",
+      evidence:"Peer-mediated instruction \u2014 NPDC Evidence-Based Practice, 2014",difficulty:"Medium"});
+  }
+  if ((p.challenges||[]).includes("self_care")) {
+    plans.morning.push({title:"Visual task strip: getting dressed",duration:"10 min",category:"Daily living",color:"#378ADD",
+      description:"Create a vertical strip of photos showing each step: underwear \u2192 shirt \u2192 pants \u2192 socks \u2192 shoes. Let "+n+" peel off each photo as she completes it. Keep the strip in the same spot every day.",
+      evidence:"Visual activity schedules \u2014 McClannahan & Krantz, 1999",difficulty:"Easy"});
+  }
+  if ((p.challenges||[]).includes("school")) {
+    plans.morning.push({title:"School preview story",duration:"5 min",category:"Preparation",color:"#534AB7",
+      description:"Show "+n+" a simple visual schedule of today\u2019s school day (if available from teacher). Talk through: \u201CFirst circle time, then art, then lunch.\u201D Knowing what\u2019s coming reduces anxiety.",
+      evidence:"Priming \u2014 Koegel et al., 2003",difficulty:"Easy"});
+  }
+
+  if (plans.evening.length < 2) {
+    plans.evening.push({title:"Highlight of the day",duration:"5 min",category:"Bonding",color:"#D4537E",
+      description:"Ask "+n+": \u201CWhat was the best part of today?\u201D Use visuals or drawings if needed. Share yours too. This builds narrative skills and connection.",
+      evidence:"Joint attention & shared engagement \u2014 Kasari et al., 2006",difficulty:"Easy"});
+  }
+  if (!plans.morning.length) {
+    plans.morning.push({title:"Visual schedule review",duration:"5 min",category:"Daily living",color:"#378ADD",
+      description:"Go through today\u2019s visual schedule with "+n+". Point to each activity and say what\u2019s happening. Let her move completed items to a \u201Cdone\u201D pocket.",
+      evidence:"Visual supports \u2014 Hume et al., 2021",difficulty:"Easy"});
+  }
+  return plans;
+}
+
+function render() {
+  const app = document.getElementById("app");
+  if (state.showPlan) {
+    renderPlan(app);
+  } else {
+    renderIntake(app);
+  }
+}
+
+function renderIntake(app) {
+  const s = INTAKE_STEPS[state.step];
+  let html = `
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:28px;margin-bottom:6px">&#127793;</div>
+      <h1 class="brand">bloom</h1>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:2px">personalized developmental guidance</p>
+    </div>
+    <div class="progress-bar">
+      ${INTAKE_STEPS.map((_,i)=>`<div class="progress-dot${i<=state.step?' active':''}"></div>`).join('')}
+    </div>
+    <div class="fade-in">
+      <div style="margin-bottom:24px">
+        <h2 class="step-title">${s.title}</h2>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.5">${s.subtitle}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+  `;
+
+  for (const f of s.fields) {
+    html += `<div><label class="field-label">${f.label}${f.max?' <span style="font-weight:400;color:var(--text-muted)">(max '+f.max+')</span>':''}</label>`;
+    if (f.type === "text") {
+      html += `<input type="text" placeholder="${f.placeholder||''}" value="${state.profile[f.key]||''}" onchange="updateField('${f.key}',this.value)"/>`;
+    } else if (f.type === "select") {
+      html += `<select onchange="updateField('${f.key}',this.value)"><option value="">Select...</option>${f.options.map(o=>`<option value="${o}"${state.profile[f.key]===o?' selected':''}>${o}</option>`).join('')}</select>`;
+    } else if (f.type === "cards") {
+      html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">`;
+      for (const o of f.options) {
+        const sel = state.profile[f.key] === o.value;
+        html += `<button class="field-card${sel?' selected':''}" onclick="updateField('${f.key}','${o.value}');render()">
+          <div style="font-weight:500;font-size:14px;color:var(--text-primary);margin-bottom:2px">${o.label}</div>
+          ${o.desc?`<div style="font-size:12px;color:var(--text-muted);line-height:1.4">${o.desc}</div>`:''}
+        </button>`;
+      }
+      html += `</div>`;
+    } else if (f.type === "multi") {
+      html += `<div style="display:flex;flex-wrap:wrap;gap:8px">`;
+      for (const o of f.options) {
+        const arr = state.profile[f.key] || [];
+        const sel = arr.includes(o.value);
+        html += `<button class="multi-chip${sel?' selected':''}" onclick="toggleMulti('${f.key}','${o.value}',${f.max||0})">${sel?'&#10003; ':''}${o.label}</button>`;
+      }
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+  html += `</div></div>`;
+
+  if (state.step === 0) {
+    html += `<div class="disclaimer"><strong>Important:</strong> This tool does not diagnose or treat any medical condition. It provides educational activity suggestions based on published research. Always consult qualified healthcare professionals for your child\u2019s care.</div>`;
+  }
+
+  html += `<div class="nav-row">`;
+  if (state.step > 0) {
+    html += `<button class="btn-ghost" onclick="prevStep()">&larr; Back</button>`;
+  } else {
+    html += `<div></div>`;
+  }
+  html += `<button class="btn-primary" onclick="nextStep()">${state.step===INTAKE_STEPS.length-1?'Generate plan':'Continue'} &rarr;</button>`;
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+function renderPlan(app) {
+  const p = state.profile;
+  const plan = generatePlan(p);
+  const n = p.childName || "your child";
+  const all = [...plan.morning,...plan.afternoon,...plan.evening];
+  const totalMin = all.reduce((s,a)=>{const m=parseInt(a.duration)||0;return s+m;},0);
+
+  let html = `<div class="fade-in" style="text-align:center;margin-bottom:32px">
+    <div style="font-size:28px;margin-bottom:8px">&#127793;</div>
+    <h1 class="plan-title">${n}\u2019s daily plan</h1>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.5">Personalized for a ${p.age}-year-old ${(p.gender||'child').toLowerCase()} \u2014 ${all.length} activities, ~${totalMin} minutes total</p>
+    <p style="font-size:12px;color:var(--accent);margin-top:6px;font-weight:500">Tap any activity to see details and evidence</p>
+  </div>`;
+
+  // Summary chips
+  html += `<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:28px">`;
+  for (const c of (p.challenges||[]).slice(0,3)) {
+    html += `<span class="summary-chip" style="background:var(--accent-bg);color:var(--accent)">${c.replace(/_/g,' ')}</span>`;
+  }
+  if (p.verbalLevel) {
+    html += `<span class="summary-chip" style="background:var(--bg-surface);color:var(--text-muted)">${p.verbalLevel} speech</span>`;
+  }
+  html += `</div>`;
+
+  const blocks = [
+    {label:"Morning",emoji:"&#9728;&#65039;",items:plan.morning},
+    {label:"Afternoon",emoji:"&#127774;",items:plan.afternoon},
+    {label:"Evening",emoji:"&#127769;",items:plan.evening}
+  ];
+
+  for (const b of blocks) {
+    html += `<div style="margin-bottom:28px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span style="font-size:15px">${b.emoji}</span>
+        <span class="time-label">${b.label}</span>
+        <span style="font-size:12px;color:var(--text-muted)">${b.items.length} ${b.items.length===1?'activity':'activities'}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">`;
+    for (let i=0; i<b.items.length; i++) {
+      const a = b.items[i];
+      const uid = b.label+'_'+i;
+      html += `<div class="activity-card" id="ac_${uid}" onclick="toggleActivity('${uid}')" style="animation:fadeUp 0.4s ease ${i*0.08}s both">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span class="cat-dot" style="background:${a.color}"></span>
+              <span style="font-size:11px;color:${a.color};font-weight:600;text-transform:uppercase;letter-spacing:0.05em">${a.category}</span>
+            </div>
+            <div style="font-weight:600;font-size:15px;color:var(--text-primary);margin-bottom:4px">${a.title}</div>
+            <div style="display:flex;gap:10px;font-size:12px;color:var(--text-muted)">
+              <span>${a.duration}</span><span style="opacity:0.4">|</span><span>${a.difficulty}</span>
+            </div>
+          </div>
+          <span class="arrow-icon" style="font-size:18px;color:var(--text-muted);margin-top:4px;flex-shrink:0">&#8964;</span>
+        </div>
+        <div class="activity-expand">
+          <p style="font-size:14px;line-height:1.65;color:var(--text-primary);margin:0 0 12px">${a.description}</p>
+          <div class="evidence-tag"><span style="font-weight:600">Evidence basis:</span> ${a.evidence}</div>
+        </div>
+      </div>`;
+    }
+    html += `</div></div>`;
+  }
+
+  html += `<div class="disclaimer"><strong>Important:</strong> This plan is for educational support only and does not replace professional therapy or medical advice. All activities are sourced from published, peer-reviewed research and evidence-based practice guidelines. Consult your child\u2019s therapy team before making changes to their program.</div>`;
+  html += `<div style="display:flex;justify-content:center;gap:12px;margin-top:24px">
+    <button class="btn-ghost" onclick="goBackToEdit()">&larr; Edit profile</button>
+    <button class="btn-primary" onclick="window.print()">&#128438; Print plan</button>
+  </div>`;
+
+  app.innerHTML = html;
+}
+
+function updateField(key, value) {
+  state.profile[key] = value;
+}
+
+function toggleMulti(key, value, max) {
+  const arr = state.profile[key] || [];
+  if (arr.includes(value)) {
+    state.profile[key] = arr.filter(v=>v!==value);
+  } else {
+    if (max && arr.length >= max) return;
+    state.profile[key] = [...arr, value];
+  }
+  render();
+}
+
+function nextStep() {
+  if (state.step < INTAKE_STEPS.length - 1) {
+    state.step++;
+  } else {
+    state.showPlan = true;
+  }
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function prevStep() {
+  if (state.step > 0) {
+    state.step--;
+    render();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+function goBackToEdit() {
+  state.showPlan = false;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleActivity(uid) {
+  const el = document.getElementById('ac_'+uid);
+  if (el) el.classList.toggle('open');
+}
+
+render();
+</script>
+</body>
+</html>
